@@ -62,7 +62,29 @@ export function ClimateImpact() {
   const [timePeriod, setTimePeriod] = useState('2024');
 
   const activeRegion = regions.find(r => r.id === activeRegionId)!;
-  const currentEmissions = emissionsDataByYear[timePeriod][activeRegionId];
+  
+  // Dynamic data based on filters
+  const getFilteredCarbonData = () => {
+    const baseData = [
+      { year: '2020', reduction: 5 },
+      { year: '2021', reduction: 12 },
+      { year: '2022', reduction: 25 },
+      { year: '2023', reduction: 45 },
+      { year: '2024', reduction: 70 },
+      { year: '2025', reduction: 98 },
+    ];
+    
+    // Simulate data changes based on region and time period
+    const multiplier = activeRegionId === 'as' ? 0.8 : activeRegionId === 'eu' ? 1.2 : 1;
+    const offset = parseInt(timePeriod) - 2024;
+    
+    return baseData.map(d => ({
+      ...d,
+      reduction: Math.min(100, Math.max(0, d.reduction * multiplier + offset * 2))
+    }));
+  };
+
+  const filteredCarbonData = getFilteredCarbonData();
 
   return (
     <section id="impact" className="py-24 px-6 md:px-12 lg:px-24 bg-brand-surface">
@@ -76,6 +98,55 @@ export function ClimateImpact() {
             The correlation between ESG performance and carbon emissions is undeniable. 
             Our agents leverage deep climate data to navigate the transition to net zero with scholarly precision.
           </p>
+        </div>
+
+        {/* Interactive Filters */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-8 px-10 rounded-[2.5rem] bg-white shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
+              <Globe className="w-3 h-3" /> Select Region
+            </span>
+            <div className="flex flex-wrap justify-center gap-2">
+              {regions.map((region) => (
+                <button
+                  key={region.id}
+                  onClick={() => setActiveRegionId(region.id)}
+                  className={cn(
+                    "px-4 py-2 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
+                    activeRegionId === region.id 
+                      ? "bg-brand-primary text-white border-brand-primary shadow-md" 
+                      : "bg-white text-brand-muted border-brand-border hover:border-brand-primary/30"
+                  )}
+                >
+                  {region.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="w-px h-12 bg-brand-border hidden md:block" />
+
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
+              <Calendar className="w-3 h-3" /> Time Period
+            </span>
+            <div className="flex gap-2">
+              {['2020', '2022', '2024', '2026'].map((year) => (
+                <button
+                  key={year}
+                  onClick={() => setTimePeriod(year)}
+                  className={cn(
+                    "px-4 py-2 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
+                    timePeriod === year 
+                      ? "bg-brand-secondary text-white border-brand-secondary shadow-md" 
+                      : "bg-white text-brand-muted border-brand-border hover:border-brand-secondary/30"
+                  )}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -130,7 +201,7 @@ export function ClimateImpact() {
             </div>
             <div className="h-[350px] w-full p-6 bg-white rounded-[2rem] shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={carbonData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <AreaChart data={filteredCarbonData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorReduction" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>

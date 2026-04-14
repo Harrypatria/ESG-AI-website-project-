@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import { Building2, Pickaxe, Landmark, Cpu, Database, ShoppingCart, Leaf } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Building2, Pickaxe, Landmark, Cpu, Database, ShoppingCart, Leaf, ArrowRight } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 const radarData = [
@@ -90,11 +91,20 @@ export function IndustryExcellence() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {industries.map((industry, index) => (
-                <div key={index} className="p-6 rounded-3xl bg-white shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] flex items-center gap-4 group hover:shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] transition-all">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-primary shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] group-hover:text-brand-secondary transition-all">
-                    <industry.icon className="w-6 h-6" />
+                <div key={index} className="p-6 rounded-3xl bg-white shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] flex flex-col gap-6 group hover:shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-primary shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] group-hover:text-brand-secondary transition-all">
+                      <industry.icon className="w-6 h-6" />
+                    </div>
+                    <span className="font-medium text-brand-text text-[10px] tracking-widest uppercase">{industry.name}</span>
                   </div>
-                  <span className="font-medium text-brand-text text-[10px] tracking-widest uppercase">{industry.name}</span>
+                  <Link 
+                    to="/solutions/placeholder"
+                    className="flex items-center justify-between px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-[8px] font-medium tracking-[0.2em] text-brand-muted uppercase group/btn hover:text-brand-primary hover:border-brand-primary transition-all"
+                  >
+                    View details
+                    <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
+                  </Link>
                 </div>
               ))}
             </div>

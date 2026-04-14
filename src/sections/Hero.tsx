@@ -38,16 +38,23 @@ export function Hero() {
         });
       }
 
-      // Sophisticated Title Animation
+      // Scatter and Reassemble Title Animation
       const titleChars = titleRef.current?.querySelectorAll("span.char");
       if (titleChars) {
         gsap.from(titleChars, {
-          y: 100,
+          x: () => (Math.random() - 0.5) * window.innerWidth * 1.5,
+          y: () => (Math.random() - 0.5) * window.innerHeight * 1.5,
+          z: () => Math.random() * 1000 - 500,
           opacity: 0,
-          rotateX: -90,
-          duration: 1.2,
-          ease: "back.out(1.7)",
-          stagger: 0.05,
+          rotation: () => Math.random() * 720 - 360,
+          rotationX: () => Math.random() * 720 - 360,
+          rotationY: () => Math.random() * 720 - 360,
+          duration: 2.5,
+          ease: "expo.out",
+          stagger: {
+            amount: 0.8,
+            from: "random"
+          },
         });
       }
 
@@ -96,6 +103,13 @@ export function Hero() {
           x: xPos * 100 * intensity,
           y: yPos * 100 * intensity,
           duration: 2,
+          ease: "power2.out",
+        });
+
+        gsap.to(".hero-subtitle", {
+          x: xPos * 30 * intensity,
+          y: yPos * 30 * intensity,
+          duration: 1.5,
           ease: "power2.out",
         });
 
@@ -184,6 +198,7 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
+            className="hero-subtitle"
           >
             <span className="inline-block px-6 py-2.5 rounded-full bg-brand-primary/10 text-brand-primary text-[10px] font-medium tracking-[0.3em] mb-10 border border-brand-primary/20 shadow-sm backdrop-blur-sm">
               Intelligence for a better planet
