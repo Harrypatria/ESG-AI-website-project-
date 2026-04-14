@@ -57,6 +57,28 @@ const scenarios = [
   }
 ];
 
+const CustomTooltip = ({ active, payload, label, prefix }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div 
+        className="bg-white p-6 rounded-2xl shadow-[10px_10px_20px_#d1d9e6,-10px_-10px_20px_#ffffff] border-none outline-none"
+        role="tooltip"
+        aria-live="polite"
+      >
+        <p className="text-[10px] font-bold text-brand-muted uppercase tracking-[0.1em] mb-2">
+          {prefix}: {label}
+        </p>
+        {payload.map((entry: any, index: number) => (
+          <p key={index} className="text-[10px] font-medium" style={{ color: entry.color }}>
+            {entry.name}: <span className="font-bold">{entry.value}{prefix === 'Year' ? '%' : ''}</span>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 export function ClimateImpact() {
   const [activeRegionId, setActiveRegionId] = useState('na');
   const [timePeriod, setTimePeriod] = useState('2024');
@@ -148,11 +170,12 @@ export function ClimateImpact() {
             <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
               <Globe className="w-3 h-3" /> Select Region
             </span>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Select Region">
               {regions.map((region) => (
                 <button
                   key={region.id}
                   onClick={() => setActiveRegionId(region.id)}
+                  aria-pressed={activeRegionId === region.id}
                   className={cn(
                     "px-5 py-2.5 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
                     activeRegionId === region.id 
@@ -172,11 +195,12 @@ export function ClimateImpact() {
             <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
               <Calendar className="w-3 h-3" /> Time Period
             </span>
-            <div className="flex gap-2">
+            <div className="flex gap-2" role="group" aria-label="Select Time Period">
               {['2020', '2022', '2024', '2026'].map((year) => (
                 <button
                   key={year}
                   onClick={() => setTimePeriod(year)}
+                  aria-pressed={timePeriod === year}
                   className={cn(
                     "px-5 py-2.5 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
                     timePeriod === year 
@@ -242,7 +266,12 @@ export function ClimateImpact() {
             </div>
             <div className="h-[350px] w-full p-6 bg-white rounded-[2rem] shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={filteredCarbonData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <AreaChart 
+                  data={filteredCarbonData} 
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  role="img"
+                  aria-label="Area chart showing carbon reduction trends over years"
+                >
                   <defs>
                     <linearGradient id="colorReduction" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
@@ -266,13 +295,7 @@ export function ClimateImpact() {
                     tickFormatter={(value) => `${value}%`} 
                     dx={-10} 
                   />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff', padding: '16px' }}
-                    itemStyle={{ color: '#10b981', fontWeight: 'medium', fontSize: '10px' }}
-                    labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-                    formatter={(value: number) => [`${value}%`, 'Reduction Potential']}
-                    labelFormatter={(label) => `Year: ${label}`}
-                  />
+                  <Tooltip content={<CustomTooltip prefix="Year" />} />
                   <Legend 
                     verticalAlign="top" 
                     align="right" 
@@ -288,7 +311,8 @@ export function ClimateImpact() {
                     strokeWidth={4}
                     fillOpacity={1} 
                     fill="url(#colorReduction)" 
-                    animationDuration={2000}
+                    animationDuration={2500}
+                    animationEasing="ease-in-out"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -308,7 +332,12 @@ export function ClimateImpact() {
             </div>
             <div className="h-[350px] w-full p-6 bg-white rounded-[2rem] shadow-[inset_6px_6px_12px_#d1d9e6,inset_-6px_-6px_12px_#ffffff]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={esgData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <BarChart 
+                  data={esgData} 
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  role="img"
+                  aria-label="Bar chart showing ESG performance scores by sector"
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                   <XAxis 
                     dataKey="name" 
@@ -325,14 +354,7 @@ export function ClimateImpact() {
                     axisLine={false} 
                     dx={-10} 
                   />
-                  <Tooltip 
-                    cursor={{ fill: '#f8fafc' }}
-                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff', padding: '16px' }}
-                    itemStyle={{ fontSize: '10px', fontWeight: 'medium' }}
-                    labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-                    formatter={(value: number) => [value, 'ESG Score Index']}
-                    labelFormatter={(label) => `Sector: ${label}`}
-                  />
+                  <Tooltip content={<CustomTooltip prefix="Sector" />} cursor={{ fill: '#f8fafc' }} />
                   <Legend 
                     verticalAlign="top" 
                     align="right" 
@@ -340,7 +362,7 @@ export function ClimateImpact() {
                     iconType="circle" 
                     wrapperStyle={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'medium', color: '#64748b' }}
                   />
-                  <Bar name="ESG Performance" dataKey="score" radius={[8, 8, 0, 0]} animationDuration={1500}>
+                  <Bar name="ESG Performance" dataKey="score" radius={[8, 8, 0, 0]} animationDuration={2000} animationEasing="ease-in-out">
                     {esgData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 3 ? '#3b82f6' : '#e2e8f0'} />
                     ))}

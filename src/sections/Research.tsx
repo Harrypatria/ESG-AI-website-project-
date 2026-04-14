@@ -81,6 +81,33 @@ export function Research() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="p-16 rounded-[4rem] bg-white shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] relative overflow-hidden text-center space-y-10"
+        >
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
+          <div className="relative z-10 space-y-6">
+            <span className="text-brand-primary font-medium tracking-[0.3em] text-[10px] uppercase">Collaboration</span>
+            <h3 className="text-4xl md:text-6xl font-display font-medium tracking-tighter text-brand-text leading-[1.1] max-w-3xl mx-auto">
+              Partner with PT AII for <span className="gradient-text">cutting-edge research</span>
+            </h3>
+            <p className="text-brand-muted text-[10px] font-normal tracking-[0.3em] max-w-xl mx-auto uppercase">
+              Join our network of scholars and industrial leaders to shape the future of autonomous intelligence.
+            </p>
+          </div>
+          <div className="relative z-10">
+            <a 
+              href="#contact" 
+              className="inline-flex items-center gap-4 px-12 py-6 bg-white text-brand-text rounded-2xl font-medium shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] hover:text-brand-primary hover:shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] transition-all group"
+            >
+              <span className="text-[10px] tracking-[0.3em] uppercase">Contact Us</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
