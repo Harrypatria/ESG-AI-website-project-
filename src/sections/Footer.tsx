@@ -39,7 +39,7 @@ export function Footer() {
             <ul className="space-y-4">
               {["Agentic AI", "ESG analytics", "Predictive maintenance", "Secure AI"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2 group uppercase">
+                  <a href="#" className="relative text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2 group uppercase after:absolute after:bottom-[-4px] after:left-0 after:h-[1px] after:w-0 after:bg-brand-primary after:transition-all after:duration-300 hover:after:w-full">
                     {item} <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
                   </a>
                 </li>
@@ -52,7 +52,7 @@ export function Footer() {
             <ul className="space-y-4">
               {["About us", "Research", "Experts", "Demos", "Careers", "Blog", "Contact"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2 group uppercase">
+                  <a href="#" className="relative text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors flex items-center gap-2 group uppercase after:absolute after:bottom-[-4px] after:left-0 after:h-[1px] after:w-0 after:bg-brand-primary after:transition-all after:duration-300 hover:after:w-full">
                     {item} <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
                   </a>
                 </li>
@@ -83,8 +83,8 @@ export function Footer() {
             © 2026 PT AII - Intelligence for a better planet. All rights reserved.
           </p>
           <div className="flex gap-8">
-            <a href="#" className="text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors uppercase">Privacy policy</a>
-            <a href="#" className="text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors uppercase">Terms of service</a>
+            <a href="#" className="relative text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors uppercase after:absolute after:bottom-[-4px] after:left-0 after:h-[1px] after:w-0 after:bg-brand-primary after:transition-all after:duration-300 hover:after:w-full">Privacy policy</a>
+            <a href="#" className="relative text-brand-muted text-[10px] font-normal tracking-widest hover:text-brand-primary transition-colors uppercase after:absolute after:bottom-[-4px] after:left-0 after:h-[1px] after:w-0 after:bg-brand-primary after:transition-all after:duration-300 hover:after:w-full">Terms of service</a>
           </div>
         </div>
       </div>
