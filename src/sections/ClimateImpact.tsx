@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { TrendingUp, Globe, BarChart3, Map as MapIcon, Calendar, Filter } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, Legend } from 'recharts';
 import { cn } from "@/src/lib/utils";
 
 const carbonData = [
@@ -267,11 +267,21 @@ export function ClimateImpact() {
                     dx={-10} 
                   />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff' }}
-                    itemStyle={{ color: '#10b981', fontWeight: 'normal', fontSize: '10px' }}
-                    formatter={(value: number) => [`${value}%`, 'Reduction']}
+                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff', padding: '16px' }}
+                    itemStyle={{ color: '#10b981', fontWeight: 'medium', fontSize: '10px' }}
+                    labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                    formatter={(value: number) => [`${value}%`, 'Reduction Potential']}
+                    labelFormatter={(label) => `Year: ${label}`}
+                  />
+                  <Legend 
+                    verticalAlign="top" 
+                    align="right" 
+                    height={36} 
+                    iconType="circle" 
+                    wrapperStyle={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'medium', color: '#64748b' }}
                   />
                   <Area 
+                    name="Carbon Reduction"
                     type="monotone" 
                     dataKey="reduction" 
                     stroke="#10b981" 
@@ -317,11 +327,20 @@ export function ClimateImpact() {
                   />
                   <Tooltip 
                     cursor={{ fill: '#f8fafc' }}
-                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff' }}
-                    itemStyle={{ fontSize: '10px', fontWeight: 'normal' }}
-                    formatter={(value: number) => [value, 'ESG score']}
+                    contentStyle={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '16px', boxShadow: '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff', padding: '16px' }}
+                    itemStyle={{ fontSize: '10px', fontWeight: 'medium' }}
+                    labelStyle={{ color: '#64748b', fontSize: '10px', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                    formatter={(value: number) => [value, 'ESG Score Index']}
+                    labelFormatter={(label) => `Sector: ${label}`}
                   />
-                  <Bar dataKey="score" radius={[8, 8, 0, 0]} animationDuration={1500}>
+                  <Legend 
+                    verticalAlign="top" 
+                    align="right" 
+                    height={36} 
+                    iconType="circle" 
+                    wrapperStyle={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'medium', color: '#64748b' }}
+                  />
+                  <Bar name="ESG Performance" dataKey="score" radius={[8, 8, 0, 0]} animationDuration={1500}>
                     {esgData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 3 ? '#3b82f6' : '#e2e8f0'} />
                     ))}

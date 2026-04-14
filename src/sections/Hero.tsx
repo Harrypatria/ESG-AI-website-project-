@@ -49,10 +49,10 @@ export function Hero() {
           rotation: () => Math.random() * 720 - 360,
           rotationX: () => Math.random() * 720 - 360,
           rotationY: () => Math.random() * 720 - 360,
-          duration: 2.5,
-          ease: "expo.out",
+          duration: 3.5,
+          ease: "power4.out",
           stagger: {
-            amount: 0.8,
+            amount: 1.2,
             from: "random"
           },
         });
