@@ -76,7 +76,7 @@ export function RecentInsights() {
                   <h3 className="text-2xl font-display font-medium text-brand-text tracking-tighter leading-tight group-hover:text-brand-primary transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-brand-muted leading-relaxed text-[10px] font-normal tracking-widest">
+                  <p className="text-brand-muted leading-loose text-[10px] font-normal tracking-widest [text-shadow:0_1px_1px_rgba(0,0,0,0.05)]">
                     {post.excerpt}
                   </p>
                 </div>
