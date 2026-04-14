@@ -69,11 +69,18 @@ export function IndustryExcellence() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {portfolio.map((item, index) => (
-              <div key={index} className="p-8 rounded-[2.5rem] bg-white border border-brand-border shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)] transition-all group">
+              <motion.div 
+                key={index} 
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.2), 0 0 30px rgba(16, 185, 129, 0.15)"
+                }}
+                className="p-8 rounded-[2.5rem] bg-white border border-brand-border shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all group cursor-pointer"
+              >
                 <span className="text-[10px] font-medium tracking-[0.3em] text-brand-primary mb-2 block uppercase">{item.category}</span>
                 <h3 className="text-xl font-display font-medium text-brand-text mb-4 tracking-tighter">{item.name}</h3>
                 <div className="text-3xl font-display font-medium text-brand-text group-hover:text-brand-primary transition-colors tracking-tighter">{item.impact}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -91,7 +98,14 @@ export function IndustryExcellence() {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {industries.map((industry, index) => (
-                <div key={index} className="p-6 rounded-3xl bg-white shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] flex flex-col gap-6 group hover:shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] transition-all">
+                <motion.div 
+                  key={index} 
+                  whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: "0 20px 40px rgba(16, 185, 129, 0.2), 0 0 30px rgba(16, 185, 129, 0.15)"
+                  }}
+                  className="p-6 rounded-3xl bg-white shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff] flex flex-col gap-6 group transition-all duration-300 cursor-pointer"
+                >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-primary shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] group-hover:text-brand-secondary transition-all">
                       <industry.icon className="w-6 h-6" />
@@ -105,7 +119,7 @@ export function IndustryExcellence() {
                     View details
                     <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
                   </Link>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -161,9 +175,13 @@ export function IndustryExcellence() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 20px 40px rgba(16, 185, 129, 0.2), 0 0 30px rgba(16, 185, 129, 0.15)"
+              }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="p-10 rounded-[2.5rem] bg-white shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] hover:shadow-[16px_16px_32px_#d1d9e6,-16px_-16px_32px_#ffffff] transition-all group"
+              className="p-10 rounded-[2.5rem] bg-white shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] transition-all group cursor-pointer"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-brand-primary mb-8 shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] group-hover:text-brand-secondary transition-all duration-500">
                 <solution.icon className="w-7 h-7" />
