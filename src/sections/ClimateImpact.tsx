@@ -84,7 +84,48 @@ export function ClimateImpact() {
     }));
   };
 
+  const getFilteredScenarios = () => {
+    const baseScenarios = [
+      {
+        temp: "+1.5°C",
+        impact: "Critical tipping point. AI-driven decarbonisation can mitigate 30% of global emissions through autonomous grid optimization and supply chain intelligence.",
+        status: "Mitigable",
+        color: "bg-blue-500",
+        potential: 85
+      },
+      {
+        temp: "+2.0°C",
+        impact: "Severe ecosystem collapse. Agentic AI required for rapid adaptation, extreme weather prediction, and autonomous resource reallocation.",
+        status: "High risk",
+        color: "bg-yellow-500",
+        potential: 60
+      },
+      {
+        temp: "+4.0°C",
+        impact: "Catastrophic global failure. Intelligence systems pivot to survival logistics, extreme climate engineering, and planetary-scale life support.",
+        status: "Critical",
+        color: "bg-red-500",
+        potential: 35
+      }
+    ];
+
+    // Adjust potential based on region and time
+    const regionMultiplier = activeRegionId === 'eu' ? 1.1 : activeRegionId === 'as' ? 0.85 : 1;
+    const timeOffset = (parseInt(timePeriod) - 2024) * 3;
+    
+    const regionContext = activeRegionId === 'as' ? " High industrial density in Asia requires aggressive agentic deployment." : 
+                          activeRegionId === 'eu' ? " European regulatory frameworks accelerate autonomous adoption." : 
+                          activeRegionId === 'na' ? " North American grid modernization drives intelligence integration." : "";
+
+    return baseScenarios.map(s => ({
+      ...s,
+      impact: s.impact + regionContext,
+      potential: Math.round(Math.min(100, Math.max(5, s.potential * regionMultiplier + timeOffset)))
+    }));
+  };
+
   const filteredCarbonData = getFilteredCarbonData();
+  const filteredScenarios = getFilteredScenarios();
 
   return (
     <section id="impact" className="py-24 px-6 md:px-12 lg:px-24 bg-brand-surface">
@@ -101,8 +142,9 @@ export function ClimateImpact() {
         </div>
 
         {/* Interactive Filters */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-8 px-10 rounded-[2.5rem] bg-white shadow-[12px_12px_24px_#d1d9e6,-12px_-12px_24px_#ffffff] border border-white/50">
-          <div className="flex flex-col items-center md:items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-10 px-12 rounded-[3rem] bg-white/80 backdrop-blur-xl shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] border border-white/50 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+          <div className="flex flex-col items-center md:items-start gap-4 relative z-10">
             <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
               <Globe className="w-3 h-3" /> Select Region
             </span>
@@ -112,10 +154,10 @@ export function ClimateImpact() {
                   key={region.id}
                   onClick={() => setActiveRegionId(region.id)}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
+                    "px-5 py-2.5 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
                     activeRegionId === region.id 
-                      ? "bg-brand-primary text-white border-brand-primary shadow-md" 
-                      : "bg-white text-brand-muted border-brand-border hover:border-brand-primary/30"
+                      ? "bg-brand-primary text-white border-brand-primary shadow-lg scale-105" 
+                      : "bg-white text-brand-muted border-brand-border hover:border-brand-primary/30 hover:shadow-md"
                   )}
                 >
                   {region.name}
@@ -124,9 +166,9 @@ export function ClimateImpact() {
             </div>
           </div>
           
-          <div className="w-px h-12 bg-brand-border hidden md:block" />
+          <div className="w-px h-16 bg-brand-border hidden md:block relative z-10" />
 
-          <div className="flex flex-col items-center md:items-start gap-4">
+          <div className="flex flex-col items-center md:items-start gap-4 relative z-10">
             <span className="text-[8px] font-medium tracking-[0.3em] text-brand-muted uppercase flex items-center gap-2">
               <Calendar className="w-3 h-3" /> Time Period
             </span>
@@ -136,10 +178,10 @@ export function ClimateImpact() {
                   key={year}
                   onClick={() => setTimePeriod(year)}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
+                    "px-5 py-2.5 rounded-xl text-[8px] font-medium tracking-widest uppercase transition-all border",
                     timePeriod === year 
-                      ? "bg-brand-secondary text-white border-brand-secondary shadow-md" 
-                      : "bg-white text-brand-muted border-brand-border hover:border-brand-secondary/30"
+                      ? "bg-brand-secondary text-white border-brand-secondary shadow-lg scale-105" 
+                      : "bg-white text-brand-muted border-brand-border hover:border-brand-secondary/30 hover:shadow-md"
                   )}
                 >
                   {year}
@@ -149,15 +191,14 @@ export function ClimateImpact() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {scenarios.map((scenario, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+          {filteredScenarios.map((scenario, index) => (
             <motion.div 
-              key={index}
+              key={`${index}-${activeRegionId}-${timePeriod}`}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.15, duration: 0.8 }}
-              viewport={{ once: true }}
-              className="p-12 rounded-[3.5rem] bg-white shadow-[16px_16px_32px_#d1d9e6,-16px_-16px_32px_#ffffff] hover:shadow-[20px_20px_40px_#d1d9e6,-20px_-20px_40px_#ffffff] transition-all duration-500 group relative flex flex-col min-h-[500px]"
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="p-12 rounded-[3.5rem] bg-white shadow-[16px_16px_32px_#d1d9e6,-16px_-16px_32px_#ffffff] hover:shadow-[24px_24px_48px_#d1d9e6,-24px_-24px_48px_#ffffff] transition-all duration-500 group relative flex flex-col min-h-[500px] border border-transparent hover:border-brand-primary/10"
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.03] pointer-events-none group-hover:opacity-[0.08] transition-opacity">
                 <Globe className="w-full h-full" />
@@ -172,13 +213,13 @@ export function ClimateImpact() {
               <div className="space-y-4">
                 <div className="flex justify-between text-[10px] font-medium tracking-[0.3em] text-brand-muted uppercase">
                   <span>Mitigation potential</span>
-                  <span className="text-brand-primary">85%</span>
+                  <span className="text-brand-primary">{scenario.potential}%</span>
                 </div>
                 <div className="h-4 w-full bg-white rounded-xl overflow-hidden p-1 shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff]">
                   <motion.div 
                     initial={{ width: 0 }}
-                    whileInView={{ width: "85%" }}
-                    transition={{ duration: 2, delay: 0.8, ease: "circOut" }}
+                    animate={{ width: `${scenario.potential}%` }}
+                    transition={{ duration: 1.5, ease: "circOut" }}
                     className={cn("h-full rounded-lg shadow-lg", scenario.color)} 
                   />
                 </div>
