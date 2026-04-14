@@ -7,6 +7,7 @@ import { ClimateImpact } from "./sections/ClimateImpact";
 import { Experts } from "./sections/Experts";
 import { IndustryExcellence } from "./sections/IndustryExcellence";
 import { Research } from "./sections/Research";
+import { RecentInsights } from "./sections/RecentInsights";
 import { Future } from "./sections/Future";
 import { Footer } from "./sections/Footer";
 import { Navbar } from "./components/Navbar";
@@ -59,6 +60,7 @@ function MainContent() {
       <ClimateImpact />
       <Future />
       <Research />
+      <RecentInsights />
       <Experts />
       <IndustryExcellence />
     </>

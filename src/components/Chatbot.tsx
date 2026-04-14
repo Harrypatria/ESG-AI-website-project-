@@ -47,6 +47,8 @@ export function Chatbot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,6 +57,20 @@ export function Chatbot() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+      
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setIsOpen(false);
+      };
+      window.addEventListener("keydown", handleEscape);
+      return () => window.removeEventListener("keydown", handleEscape);
+    } else {
+      toggleRef.current?.focus();
+    }
+  }, [isOpen]);
 
   const handleSend = async (text: string = input) => {
     if (!text.trim() || isLoading) return;
@@ -91,11 +107,15 @@ export function Chatbot() {
     <>
       {/* Floating Toggle Button */}
       <motion.button
+        ref={toggleRef}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Close chat" : "Open chat"}
+        aria-expanded={isOpen}
+        aria-controls="chatbot-window"
         className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-brand-primary text-white rounded-full shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.8)] flex items-center justify-center group overflow-hidden"
       >
         <AnimatePresence mode="wait">
@@ -106,7 +126,7 @@ export function Chatbot() {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
             >
-              <X className="w-8 h-8" />
+              <X className="w-8 h-8" aria-hidden="true" />
             </motion.div>
           ) : (
             <motion.div
@@ -116,7 +136,7 @@ export function Chatbot() {
               exit={{ rotate: -90, opacity: 0 }}
               className="relative"
             >
-              <MessageSquare className="w-8 h-8" />
+              <MessageSquare className="w-8 h-8" aria-hidden="true" />
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
@@ -131,6 +151,10 @@ export function Chatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="chatbot-window"
+            role="dialog"
+            aria-label="PT AII Assistant Chat"
+            aria-modal="false"
             initial={{ opacity: 0, y: 100, scale: 0.9, x: 50 }}
             animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
             exit={{ opacity: 0, y: 100, scale: 0.9, x: 50 }}
@@ -140,26 +164,30 @@ export function Chatbot() {
             <div className="p-8 bg-gradient-to-br from-brand-primary/10 to-transparent border-b border-brand-border flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-white shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] flex items-center justify-center text-brand-primary">
-                  <Bot className="w-7 h-7" />
+                  <Bot className="w-7 h-7" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="font-display font-black text-xl tracking-tighter text-brand-text">PT AII Assistant</h3>
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true" />
                     <span className="text-[10px] font-black tracking-widest text-brand-muted uppercase">Online</span>
                   </div>
                 </div>
               </div>
               <button 
                 onClick={() => setMessages([{ role: "model", text: "Chat history cleared. How can I help you?" }])}
+                aria-label="Clear chat history"
                 className="p-3 rounded-xl hover:bg-white transition-colors text-brand-muted hover:text-brand-primary"
               >
-                <RefreshCw className="w-5 h-5" />
+                <RefreshCw className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-grow overflow-y-auto p-8 space-y-6 scrollbar-hide">
+            <div 
+              className="flex-grow overflow-y-auto p-8 space-y-6 scrollbar-hide"
+              aria-live="polite"
+            >
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -180,7 +208,7 @@ export function Chatbot() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white p-6 rounded-3xl rounded-tl-none shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] flex gap-2">
+                  <div className="bg-white p-6 rounded-3xl rounded-tl-none shadow-[8px_8px_16px_#d1d9e6,-8px_-8px_16px_#ffffff] flex gap-2" aria-label="Assistant is typing">
                     <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1.5 h-1.5 bg-brand-primary rounded-full" />
                     <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-1.5 h-1.5 bg-brand-primary rounded-full" />
                     <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-1.5 h-1.5 bg-brand-primary rounded-full" />
@@ -192,7 +220,7 @@ export function Chatbot() {
 
             {/* Quick Queries */}
             {messages.length === 1 && (
-              <div className="px-8 pb-4 flex flex-wrap gap-2">
+              <div className="px-8 pb-4 flex flex-wrap gap-2" role="group" aria-label="Quick questions">
                 {QUICK_QUERIES.map((query, i) => (
                   <button
                     key={i}
@@ -211,7 +239,10 @@ export function Chatbot() {
                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
                 className="relative"
               >
+                <label htmlFor="chatbot-input" className="sr-only">Type your message</label>
                 <input
+                  id="chatbot-input"
+                  ref={inputRef}
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -221,9 +252,10 @@ export function Chatbot() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
+                  aria-label="Send message"
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-brand-primary text-white rounded-xl flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-5 h-5" aria-hidden="true" />
                 </button>
               </form>
               <p className="mt-4 text-[8px] text-center text-brand-muted font-black tracking-[0.2em] uppercase">
